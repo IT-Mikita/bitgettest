@@ -70,11 +70,46 @@
         }
         .profile_namebox{
             display: flex;
+            color: var(--tg-theme-text-color);
         }
         .profile_name {
             color: var(--tg-theme-text-color);
             font-weight: bold;
             margin-bottom: 0;
+        }
+
+        label {
+            display: inline-block;
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: calc(100% - 40px); /* Учитывая отступы */
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            border: 1px solid #ccc; /* Легкая граница для видимости */
+            background-color: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .radio-option {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
         }
 
         select {
@@ -265,6 +300,7 @@
         }
         document.addEventListener("DOMContentLoaded", function() {
             let tg = window.Telegram.WebApp;
+            document.getElementById("profile_name").innerText = `${tg.initDataUnsafe.user.first_name}`;
             const formElements = document.querySelectorAll("#cryptoForm input, #cryptoForm select");
             formElements.forEach(element => {
                 element.addEventListener('input', checkInputs);
