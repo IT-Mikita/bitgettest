@@ -103,11 +103,11 @@
         }
 
         input[type=radio] + label {
-            padding: 10px 15px;
+            padding: 5px 15px;
             border-radius: 20px;
             background:  var(--tg-theme-bg-color);
             color: var(--tg-theme-text-color);
-            width: 35px;
+            width: 45px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
@@ -127,7 +127,6 @@
         select {
             width: calc(100% - 40px); /* Учитывая отступы по 20px с каждой стороны */
             padding: 8px; /* Увеличиваем отступы для удобства использования */
-            margin: 20px; /* Отступ от краев экрана */
             font-size: 16px;
             border-radius: 15px; /* Скругленные углы */
             border: 1px; /* Граница для четкости */
@@ -246,7 +245,7 @@
 
                 <div class="form-group">
                     <label for="leverage">Leverage:</label>
-                    <input id="leverage" name="leverage" onchange="updateLiquidationPrice()">
+                    <input type="number" id="leverage" name="leverage" onchange="updateLiquidationPrice()">
                 </div>
 
                 <div class="form-group">
@@ -272,52 +271,28 @@
                     <button class="add-button"  type="button" onclick="addTakeProfit()">+</button>
                     <button class="remove-button" type="button" onclick="removeTakeProfit()">-</button>
                     <div id="takeProfitsContainer">
-                        <input id="takeProfit1" name="takeProfits">
+                        <input type="number" id="takeProfit1" name="takeProfits">
                     </div>
                 </div>
             </form>
         </main>
     </div>
     <script>
-        function addEntryPrice() {
-            const container = document.getElementById('entryPricesContainer');
-            const newId = container.children.length + 1;
-            const input = document.createElement('input');
-            input.id = 'entryPrice' + newId;
-            input.name = 'entryPrices';
-            container.appendChild(input);
-            input.addEventListener('input', checkInputs);
-        }
-
-        function removeEntryPrice() {
-            const container = document.getElementById('entryPricesContainer');
-            if (container.children.length > 1) {
-                container.removeChild(container.lastChild);
-            }
-            checkInputs();
-        }
-
-        function addTakeProfit() {
-            const container = document.getElementById('takeProfitsContainer');
-            const newId = container.children.length + 1;
-            const input = document.createElement('input');
-            input.id = 'takeProfit' + newId;
-            input.name = 'takeProfits';
-            container.appendChild(input);
-            input.addEventListener('input', checkInputs);
-        }
-
-        function removeTakeProfit() {
-            const container = document.getElementById('takeProfitsContainer');
-            if (container.children.length > 1) {
-                container.removeChild(container.lastChild);
-            }
-            checkInputs();
-        }
         document.addEventListener("DOMContentLoaded", function() {
             let tg = window.Telegram.WebApp;
             document.getElementById("profile_name").innerText = `${tg.initDataUnsafe.user.first_name}`;
             const formElements = document.querySelectorAll("#cryptoForm input, #cryptoForm select");
+
+            function checkInputs() {
+                if (allInputsFilled()) {
+                    MainButton.setParams({"color": buttonColor});
+                    MainButton.enable();
+                } else {
+                    MainButton.setParams({"color": "#e5e5e5"});
+                    MainButton.disable();
+                }
+            }
+
             formElements.forEach(element => {
                 element.addEventListener('input', checkInputs);
             });
@@ -350,15 +325,42 @@
                 window.location.href = "/";
             });
 
+            function addEntryPrice() {
+                const container = document.getElementById('entryPricesContainer');
+                const newId = container.children.length + 1;
+                const input = document.createElement('input');
+                input.id = 'entryPrice' + newId;
+                input.name = 'entryPrices';
+                input.type = 'number';
+                container.appendChild(input);
+                input.addEventListener('input', checkInputs);
+            }
 
-            function checkInputs() {
-                if (allInputsFilled()) {
-                    MainButton.setParams({"color": buttonColor});
-                    MainButton.enable();
-                } else {
-                    MainButton.setParams({"color": "#e5e5e5"});
-                    MainButton.disable();
+            function removeEntryPrice() {
+                const container = document.getElementById('entryPricesContainer');
+                if (container.children.length > 1) {
+                    container.removeChild(container.lastChild);
                 }
+                checkInputs();
+            }
+
+            function addTakeProfit() {
+                const container = document.getElementById('takeProfitsContainer');
+                const newId = container.children.length + 1;
+                const input = document.createElement('input');
+                input.id = 'takeProfit' + newId;
+                input.name = 'takeProfits';
+                input.type = 'number';
+                container.appendChild(input);
+                input.addEventListener('input', checkInputs);
+            }
+
+            function removeTakeProfit() {
+                const container = document.getElementById('takeProfitsContainer');
+                if (container.children.length > 1) {
+                    container.removeChild(container.lastChild);
+                }
+                checkInputs();
             }
 
             checkInputs();
