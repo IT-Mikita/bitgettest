@@ -162,10 +162,12 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="entryPricesGroup">
                     <label for="entryPrices">Entry Prices:</label>
-                    <div>
-                        <input id="entryPrice" name="entryPrices">
+                    <button type="button" onclick="addEntryPrice()">+</button>
+                    <button type="button" onclick="removeEntryPrice()">-</button>
+                    <div id="entryPricesContainer">
+                        <input id="entryPrice1" name="entryPrices">
                     </div>
                 </div>
 
@@ -192,27 +194,88 @@
                     <input id="stopLoss" name="stopLoss">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="takeProfitsGroup">
                     <label for="takeProfits">Take Profits:</label>
-                    <input id="takeProfit1" name="takeProfits">
-                    <!-- Добавить дополнительные поля для Take Profit при необходимости -->
+                    <button type="button" onclick="addTakeProfit()">+</button>
+                    <button type="button" onclick="removeTakeProfit()">-</button>
+                    <div id="takeProfitsContainer">
+                        <input id="takeProfit1" name="takeProfits">
+                    </div>
                 </div>
-
-                <input type="submit" value="Submit">
             </form>
         </main>
     </div>
     <script>
+        function addEntryPrice() {
+            const container = document.getElementById('entryPricesContainer');
+            const newId = container.children.length + 1;
+            const input = document.createElement('input');
+            input.id = 'entryPrice' + newId;
+            input.name = 'entryPrices';
+            container.appendChild(input);
+            input.addEventListener('input', checkInputs);
+        }
+
+        function removeEntryPrice() {
+            const container = document.getElementById('entryPricesContainer');
+            if (container.children.length > 1) {
+                container.removeChild(container.lastChild);
+            }
+            checkInputs();
+        }
+
+        function addTakeProfit() {
+            const container = document.getElementById('takeProfitsContainer');
+            const newId = container.children.length + 1;
+            const input = document.createElement('input');
+            input.id = 'takeProfit' + newId;
+            input.name = 'takeProfits';
+            container.appendChild(input);
+            input.addEventListener('input', checkInputs);
+        }
+
+        function removeTakeProfit() {
+            const container = document.getElementById('takeProfitsContainer');
+            if (container.children.length > 1) {
+                container.removeChild(container.lastChild);
+            }
+            checkInputs();
+        }
         document.addEventListener("DOMContentLoaded", function() {
             let tg = window.Telegram.WebApp;
+            const formElements = document.querySelectorAll("#cryptoForm input, #cryptoForm select");
+            formElements.forEach(element => {
+                element.addEventListener('input', checkInputs);
+            });
 
-            document.getElementById("profile_name").innerText = `${tg.initDataUnsafe.user.first_name}`;
+            function allInputsFilled() {
+                return Array.from(formElements).every(element => {
+                    if (element.type === "radio") {
+                        const name = element.name;
+                        return Array.from(document.getElementsByName(name)).some(radio => radio.checked);
+                    }
+                    return element.value.trim() !== '';
+                });
+            }
 
             var MainButton = tg.MainButton;
             MainButton.text = "Start";
             MainButton.onClick(function() {
                 window.location.href = "/";
             });
+
+
+            function checkInputs() {
+                if (allInputsFilled()) {
+                    MainButton.setParams({"color": buttonColor});
+                    MainButton.enable();
+                } else {
+                    MainButton.setParams({"color": "#e5e5e5"});
+                    MainButton.disable();
+                }
+            }
+
+            checkInputs();
 
             let lastViewportHeight = tg.viewportHeight;
             function checkExpandedState() {
@@ -232,6 +295,12 @@
             }
             checkExpandedState();
             checkViewportHeightChange();
+
+
+            const dynamicFields = document.querySelectorAll("#entryPricesContainer input, #takeProfitsContainer input");
+            dynamicFields.forEach(field => {
+                field.addEventListener('input', checkInputs);
+            });
 
         });
     </script>
