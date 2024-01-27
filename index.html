@@ -1,198 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Crypto Trading Form</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bitget Entry</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/dragula/dist/dragula.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dragula/dist/dragula.min.css">
+    <script>
+        function setThemeClass() {
+            document.documentElement.className = Telegram.WebApp.colorScheme;
+        }
+        Telegram.WebApp.onEvent('themeChanged', setThemeClass);
+        setThemeClass();
+    </script>
     <style>
         body {
+            margin: 0;
+            padding: 0;
+            color: var(--tg-theme-text-color);
+            background: var(--tg-theme-secondary-bg-color);
+            overflow: hidden;
             font-family: Arial, sans-serif;
-            background-color: #424242;
-            color: #fff;
-            padding: 20px;
-            font-size: 16px;
-        }
 
-        form {
-            background-color: #1f1f1f;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            margin: auto;
         }
-
-        .form-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+        :root {
+            --do-color: #d3d3d3;
+            --doing-color: #d3d3d3;
+            --done-color: #d3d3d3;
+            --arrow-background: var(--tg-theme-bg-color) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23000" d="M2 0L0 2h4z" transform="rotate(180 2 1.5)"/></svg>') no-repeat right 10px center;
         }
-
-        label {
-            background-color: white;
-            color: black;
-            text-align: center;
-            border-radius: 20px;
-            padding: 10px;
-            flex-shrink: 0;
-            width: 150px; /* Фиксированная ширина для всех меток */
-            margin-right: 10px; /* Отступ справа от метки */
+        .dark {
+            --do-color: #d3d3d3;
+            --doing-color: #d3d3d3;
+            --done-color: #d3d3d3;
+            --arrow-background: var(--tg-theme-bg-color) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23FFF" d="M2 0L0 2h4z" transform="rotate(180 2 1.5)"/></svg>') no-repeat right 10px center;
         }
-
-        input {
-            width: calc(100% - 20px);
-            border: 1px solid #424242;
-            background-color: #1f1f1f;
-            color: white;
-            padding: 8px;
-            font-size: 16px;
-            border-radius: 15px;
-            flex-grow: 1;
-        }
-
-        input[type=radio] {
+        .scrollable_content::-webkit-scrollbar {
             display: none;
+            width: 0;  /* Убираем вертикальный скролл */
+            height: 0; /* Убираем горизонтальный скролл */
         }
-
-        label[for="long"], label[for="short"] {
-            display: inline-block;
-            vertical-align: middle;
-            margin-bottom: 0;
-            cursor: pointer;
+        .scrollable_content {
+            -ms-overflow-style: none;  /* IE и Edge */
+            scrollbar-width: none;  /* Firefox */
+            max-height: 100vh;
+            overflow-y: auto;
+            margin: 0;
+            padding-top: 80px;
+            box-sizing: border-box;
         }
-
-        .radio-group {
+        header {
+            max-height: 55px;
             display: flex;
+            padding: 10px 20px 10px 20px;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            justify-content: space-between;
+            align-items: center;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            position: fixed;
+            top: 0;
+            width: calc(100% - 40px);
+            z-index: 10;
         }
-
-        .radio-option {
+        .profile {
             display: flex;
             align-items: center;
-            margin-right: 10px; /* Добавляем немного пространства между опциями */
+            text-decoration: none;
         }
-
-        input[type=radio] + label {
-            padding: 10px 15px;
-            border-radius: 20px;
-            background: #1f1f1f; /* Начальный цвет фона */
-            color: white;
-            width: 35px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .profile_avatar img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 5px;
         }
-
-        input[type=radio]:checked + label {
-            background-color: #03aac7; /* Цвет фона при выборе */
+        .profile_detail {
+            align-items: center; /* Центрируем элементы по вертикали */
         }
-
-        input[type=submit] {
-            width: calc(100%);
-            background-color: #03aac7;
-            color: #fff;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 48px;
-            border: none;
-            text-align: center;
-            transition: background-color 0.3s;
-            margin-top: 10px;
+        .profile_namebox{
+            display: flex;
         }
-
-        input[type=submit]:hover {
-            background-color: #0293a0;
-        }
-
-        #liquidationPrice {
+        .profile_name {
+            color: var(--tg-theme-text-color);
             font-weight: bold;
+            margin-bottom: 0;
         }
 
         select {
-            flex-grow: 1;
-            width: calc(100% - 20px); /* Учитываем отступы по 20px с каждой стороны */
-            padding: 8px; /* Увеличиваем отступы для удобства использования */
+            width: calc(100% - 40px); /* Учитывая отступы по 20px с каждой стороны */
+            padding: 15px; /* Увеличиваем отступы для удобства использования */
+            margin: 20px; /* Отступ от краев экрана */
             font-size: 16px;
             border-radius: 15px; /* Скругленные углы */
-            border: 1px solid #424242; /* Стиль и цвет границы */
+            border: 1px; /* Граница для четкости */
             appearance: none; /* Убираем стандартные стили select в некоторых браузерах */
             -webkit-appearance: none;
             -moz-appearance: none;
-            background-color: #424242;
-            color: #fff;
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
             cursor: pointer; /* Курсор в виде руки для указания на интерактивность */
-            background: #1f1f1f;
+            background: var(--arrow-background);
             background-position: right 15px bottom 15px;
             background-size: 10px;
         }
-        #entryPrice{
-            width: calc(100% - 20px);
+        /* Стили для стрелки выпадающего списка в Firefox */
+        @-moz-document url-prefix() {
+            select {
+                padding-right: 30px;
+                background: var(--arrow-background);
+                background-size: 10px;
+            }
         }
-
+        /* Стили для стрелки выпадающего списка в остальных браузерах */
+        select::-ms-expand {
+            display: none; /* Убираем стандартную стрелку в IE/Edge */
+        }
     </style>
 </head>
 <body>
-    <form id="cryptoForm">
-        <div class="form-group">
-            <label for="cryptoName">Name of the crypto:</label>
-            <select id="cryptoName">
-                <!-- Опции для криптовалют -->
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="amountUSD">Amount of USD to buy:</label>
-            <input id="amountUSD" name="amountUSD">
-        </div>
-
-        <div class="form-group">
-            <label for="position">Position:</label>
-            <div class="radio-group">
-                <div class="radio-option">
-                    <input type="radio" id="long" name="position" value="Long">
-                    <label for="long">Long</label>
+    <div class="scrollable_content">
+        <header>
+            <a class="profile">
+                <div class="profile_avatar">
+                    <img src="https://play-lh.googleusercontent.com/8LuyzmkLRILH6vVF7OBU8zf1-gLiWqUHINbiGLgWoXn7W48Mcr6wYcmGnS7YFfT24w" alt="profile_avatar">
                 </div>
-                <div class="radio-option">
-                    <input type="radio" id="short" name="position" value="Short" checked>
-                    <label for="short">Short</label>
+                <div class="profile_detail">
+                    <div class="profile_namebox">
+                        <div class="profile_name" id="profile_name"> </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </a>
+        </header>
+        <main>
 
-        <div class="form-group">
-            <label for="entryPrices">Entry Prices:</label>
-            <div>
-                <input id="entryPrice" name="entryPrices">
-            </div>
-        </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let tg = window.Telegram.WebApp;
 
-        <div class="form-group">
-            <label for="leverage">Leverage:</label>
-            <input id="leverage" name="leverage" onchange="updateLiquidationPrice()">
-        </div>
+            document.getElementById("profile_name").innerText = `${tg.initDataUnsafe.user.first_name}`;
 
-        <div class="form-group">
-            <label>Liquidation Price:</label>
-            <span id="liquidationPrice">---</span>
-        </div>
+            var MainButton = tg.MainButton;
+            MainButton.text = "Start";
+            MainButton.onClick(function() {
+                window.location.href = "/";
+            });
 
-        <div class="form-group">
-            <label for="marginType">Margin Type:</label>
-            <select id="marginType">
-                <option value="isolated">Isolated</option>
-                <option value="crossed">Crossed</option>
-            </select>
-        </div>
+            let lastViewportHeight = tg.viewportHeight;
+            function checkExpandedState() {
+                if (tg.isExpanded) {
+                    tg.MainButton.show();
+                } else {
+                    tg.MainButton.hide();
+                }
+            }
 
-        <div class="form-group">
-            <label for="stopLoss">Stop Loss:</label>
-            <input id="stopLoss" name="stopLoss">
-        </div>
+            function checkViewportHeightChange() {
+                if (tg.viewportHeight !== lastViewportHeight) {
+                    checkExpandedState();
+                    lastViewportHeight = tg.viewportHeight;
+                }
+                requestAnimationFrame(checkViewportHeightChange);
+            }
+            checkExpandedState();
+            checkViewportHeightChange();
 
-        <div class="form-group">
-            <label for="takeProfits">Take Profits:</label>
-            <input id="takeProfit1" name="takeProfits">
-            <!-- Добавить дополнительные поля для Take Profit при необходимости -->
-        </div>
-
-        <input type="submit" value="Submit">
-    </form>
-
-    <script src="script.js"></script>
+        });
+    </script>
 </body>
 </html>
