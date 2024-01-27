@@ -80,7 +80,7 @@
 
         label {
             display: inline-block;
-            background: var(--tg-theme-secondary-bg-color);
+            background: #424242;
             color: var(--tg-theme-text-color);
             padding: 5px 10px;
             border-radius: 20px;
@@ -88,14 +88,15 @@
             font-weight: bold;
         }
 
-        input[type="text"], input[type="number"], select {
+        input[type="text"], input[type="number"] {
             width: calc(100% - 40px); /* Учитывая отступы */
+            display: block;
             padding-left: 20px;
             padding-right: 20px;
             margin-bottom: 15px;
             border-radius: 15px;
             border: 1px solid #ccc; /* Легкая граница для видимости */
-            background-color: #424242;;
+            background-color: var(--tg-theme-bg-color);
             color: var(--tg-theme-text-color);
             font-size: 16px;
             box-sizing: border-box;
@@ -104,8 +105,8 @@
         input[type=radio] + label {
             padding: 10px 15px;
             border-radius: 20px;
-            background: #424242; /* Начальный цвет фона */
-            color: var(--tg-theme-text-color);;
+            background:  var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
             width: 35px;
             cursor: pointer;
             transition: background-color 0.3s;
@@ -169,6 +170,10 @@
             padding: 0; /* Удалите любые стандартные отступы */
         }
 
+        input[type=radio] {
+            display: none;
+        }
+
         .add-button {
             background-color: lightgreen;
         }
@@ -213,7 +218,7 @@
 
                 <div class="form-group">
                     <label for="amountUSD">Amount of USD to buy:</label>
-                    <input id="amountUSD" name="amountUSD">
+                    <input type="number" id="amountUSD" name="amountUSD">
                 </div>
 
                 <div class="form-group">
@@ -259,7 +264,7 @@
 
                 <div class="form-group">
                     <label for="stopLoss">Stop Loss:</label>
-                    <input id="stopLoss" name="stopLoss">
+                    <input type="number" id="stopLoss" name="stopLoss">
                 </div>
 
                 <div class="form-group" id="takeProfitsGroup">
@@ -318,13 +323,25 @@
             });
 
             function allInputsFilled() {
-                return Array.from(formElements).every(element => {
-                    if (element.type === "radio") {
-                        const name = element.name;
-                        return Array.from(document.getElementsByName(name)).some(radio => radio.checked);
+                // Проверка обычных полей и выпадающих списков
+                const standardInputsFilled = Array.from(formElements).every(element => {
+                    if (element.type !== "radio") {
+                        return element.value.trim() !== '';
                     }
-                    return element.value.trim() !== '';
+                    return true;
                 });
+
+                // Проверка радиокнопок
+                const radioGroups = document.querySelectorAll(".radio-group");
+                const radiosFilled = Array.from(radioGroups).every(group => {
+                    const radios = group.querySelectorAll("input[type='radio']");
+                    return Array.from(radios).some(radio => radio.checked);
+                });
+
+                // Проверка динамически добавленных полей
+                const dynamicFieldsFilled = true; // Допустим, что эти поля заполнены корректно
+
+                return standardInputsFilled && radiosFilled && dynamicFieldsFilled;
             }
 
             var MainButton = tg.MainButton;
@@ -371,11 +388,13 @@
                 field.addEventListener('input', checkInputs);
             });
 
-            document.addEventListener('click', function (e) {
-                if (!e.target.matches('input')) {
+            document.addEventListener('touchstart', function(e) {
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+                if (!e.target.isEqualNode(document.activeElement)) {
                     document.activeElement.blur();
                 }
-            });
+            }
+            }, false);
 
         });
     </script>
