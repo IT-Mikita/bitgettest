@@ -25,18 +25,6 @@
             font-family: Arial, sans-serif;
 
         }
-        :root {
-            --do-color: #d3d3d3;
-            --doing-color: #d3d3d3;
-            --done-color: #d3d3d3;
-            --arrow-background: var(--tg-theme-bg-color) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23000" d="M2 0L0 2h4z" transform="rotate(180 2 1.5)"/></svg>') no-repeat right 10px center;
-        }
-        .dark {
-            --do-color: #d3d3d3;
-            --doing-color: #d3d3d3;
-            --done-color: #d3d3d3;
-            --arrow-background: var(--tg-theme-bg-color) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23FFF" d="M2 0L0 2h4z" transform="rotate(180 2 1.5)"/></svg>') no-repeat right 10px center;
-        }
         .scrollable_content::-webkit-scrollbar {
             display: none;
             width: 0;  /* Убираем вертикальный скролл */
@@ -91,7 +79,7 @@
 
         select {
             width: calc(100% - 40px); /* Учитывая отступы по 20px с каждой стороны */
-            padding: 15px; /* Увеличиваем отступы для удобства использования */
+            padding: 8px; /* Увеличиваем отступы для удобства использования */
             margin: 20px; /* Отступ от краев экрана */
             font-size: 16px;
             border-radius: 15px; /* Скругленные углы */
@@ -102,7 +90,6 @@
             background-color: var(--tg-theme-bg-color);
             color: var(--tg-theme-text-color);
             cursor: pointer; /* Курсор в виде руки для указания на интерактивность */
-            background: var(--arrow-background);
             background-position: right 15px bottom 15px;
             background-size: 10px;
         }
@@ -110,13 +97,48 @@
         @-moz-document url-prefix() {
             select {
                 padding-right: 30px;
-                background: var(--arrow-background);
+
                 background-size: 10px;
             }
         }
         /* Стили для стрелки выпадающего списка в остальных браузерах */
         select::-ms-expand {
             display: none; /* Убираем стандартную стрелку в IE/Edge */
+        }
+
+        .buttons {
+            margin: 10px 0;
+        }
+
+        .add-button, .remove-button {
+            border: none;
+            border-radius: 50%;
+            width: 23px;
+            height: 23px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            padding: 0; /* Удалите любые стандартные отступы */
+        }
+
+        .add-button {
+            background-color: lightgreen;
+        }
+
+        .remove-button {
+            background-color: lightcoral;
+        }
+
+        #entryPricesContainer, #takeProfitsContainer {
+            margin-top: 10px;
+        }
+
+        #entryPricesContainer input, #takeProfitsContainer input {
+            display: block;
+            width: calc(100% - 20px); /* Учитывая отступы */
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -164,8 +186,8 @@
 
                 <div class="form-group" id="entryPricesGroup">
                     <label for="entryPrices">Entry Prices:</label>
-                    <button type="button" onclick="addEntryPrice()">+</button>
-                    <button type="button" onclick="removeEntryPrice()">-</button>
+                    <button class="add-button"  type="button" onclick="addEntryPrice()">+</button>
+                    <button class="remove-button" type="button" onclick="removeEntryPrice()">-</button>
                     <div id="entryPricesContainer">
                         <input id="entryPrice1" name="entryPrices">
                     </div>
@@ -196,8 +218,8 @@
 
                 <div class="form-group" id="takeProfitsGroup">
                     <label for="takeProfits">Take Profits:</label>
-                    <button type="button" onclick="addTakeProfit()">+</button>
-                    <button type="button" onclick="removeTakeProfit()">-</button>
+                    <button class="add-button"  type="button" onclick="addTakeProfit()">+</button>
+                    <button class="remove-button" type="button" onclick="removeTakeProfit()">-</button>
                     <div id="takeProfitsContainer">
                         <input id="takeProfit1" name="takeProfits">
                     </div>
