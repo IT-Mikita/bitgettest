@@ -211,7 +211,6 @@
                 <div class="form-group">
                     <label for="cryptoName">Name of the crypto:</label>
                     <select id="cryptoName">
-                        <option value="btc">BTC</option>
                     </select>
                 </div>
 
@@ -330,7 +329,7 @@
                 option.textContent = crypto;
                 select.appendChild(option);
             });
-
+            let buttonColor = getComputedStyle(document.documentElement).getPropertyValue('--tg-theme-button-color').trim();
             function checkInputs() {
                 if (allInputsFilled()) {
                     MainButton.setParams({"color": buttonColor});
