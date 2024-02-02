@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bitget Entry</title>
+    <title>Yandex Admin Panel</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/dragula/dist/dragula.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/dragula/dist/dragula.min.css">
@@ -24,6 +24,18 @@
             overflow: hidden;
             font-family: Arial, sans-serif;
 
+        }
+        :root {
+            --do-color: #d3d3d3;
+            --doing-color: #d3d3d3;
+            --done-color: #d3d3d3;
+            --arrow-background: var(--tg-theme-bg-color) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23000" d="M2 0L0 2h4z" transform="rotate(180 2 1.5)"/></svg>') no-repeat right 10px center;
+        }
+        .dark {
+            --do-color: #d3d3d3;
+            --doing-color: #d3d3d3;
+            --done-color: #d3d3d3;
+            --arrow-background: var(--tg-theme-bg-color) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23FFF" d="M2 0L0 2h4z" transform="rotate(180 2 1.5)"/></svg>') no-repeat right 10px center;
         }
         .scrollable_content::-webkit-scrollbar {
             display: none;
@@ -61,72 +73,111 @@
         }
         .profile_avatar img {
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            margin-right: 10px;
+            width: 50px;
+            height: 50px;
+            margin-right: 5px;
         }
         .profile_detail {
             align-items: center; /* Центрируем элементы по вертикали */
         }
         .profile_namebox{
             display: flex;
-            color: var(--tg-theme-text-color);
         }
         .profile_name {
             color: var(--tg-theme-text-color);
             font-weight: bold;
             margin-bottom: 0;
         }
-
-        label {
-            display: inline-block;
-            background: #424242;
-            color: var(--tg-theme-text-color);
-            padding: 5px 10px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        input[type="text"], input[type="number"] {
-            width: calc(100% - 40px); /* Учитывая отступы */
-            display: block;
-            padding-left: 20px;
-            padding-right: 20px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            border: 1px solid #ccc; /* Легкая граница для видимости */
-            background-color: var(--tg-theme-bg-color);
-            color: var(--tg-theme-text-color);
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-
-        input[type=radio] + label {
-            padding: 5px 15px;
-            border-radius: 20px;
-            background:  var(--tg-theme-bg-color);
-            color: var(--tg-theme-text-color);
-            width: 45px;
+        .mode_box {
+            display: flex;
+            align-items: center;
             cursor: pointer;
-            transition: background-color 0.3s;
+        }
+        .mode_box svg{
+            color: var(--tg-theme-text-color);
+            transform: rotate(90deg);
+            width: 15px;
+            margin-left:5px;
+        }
+        .switchMode {
+            display: none;
+            position: absolute;
+            right: 0px;
+            top: 55px;
+            padding: 15px 20px 15px 20px;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            z-index: 11;
+        }
+        .kanban {
+            -ms-overflow-style: none;  /* IE и Edge */
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+            margin-left: 10px;
+            padding-bottom: 50px;
+        }
+        .kanban::-webkit-scrollbar {
+            display: none;
+            width: 0;  /* Убираем вертикальный скролл */
+            height: 0; /* Убираем горизонтальный скролл */
+        }
+        .kanban-column {
+            flex: 1;
+            margin: 10px;
+            padding: 10px;
+            padding-top: 0px;
+            padding-bottom: 15px;
+            border-radius: 15px;
+            min-width: 250px;
+        }
+        .do{
+            background-color: var(--do-color);
         }
 
-        input[type=radio]:checked + label {
-            background-color: #03aac7; /* Цвет фона при выборе */
+        .doing {
+            background-color: var(--doing-color);
         }
 
-        .radio-option {
-            margin-bottom: 10px;
+        .done {
+            background-color: var(--done-color);
         }
 
-        .form-group {
-            margin-bottom: 10px;
+        .dragging {
+            cursor: grabbing;
+            opacity: 0.5;
         }
-
+        .no-drag{
+            color: #000;
+            -webkit-user-select: none;
+        }
+        .kanban-task {
+            -webkit-user-select: none;
+            cursor: grab;
+            background-color: #fff;
+            color: #000;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .is-moving {
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+        }
         select {
             width: calc(100% - 40px); /* Учитывая отступы по 20px с каждой стороны */
-            padding: 8px; /* Увеличиваем отступы для удобства использования */
+            padding: 15px; /* Увеличиваем отступы для удобства использования */
+            margin: 20px; /* Отступ от краев экрана */
             font-size: 16px;
             border-radius: 15px; /* Скругленные углы */
             border: 1px; /* Граница для четкости */
@@ -136,6 +187,7 @@
             background-color: var(--tg-theme-bg-color);
             color: var(--tg-theme-text-color);
             cursor: pointer; /* Курсор в виде руки для указания на интерактивность */
+            background: var(--arrow-background);
             background-position: right 15px bottom 15px;
             background-size: 10px;
         }
@@ -143,7 +195,7 @@
         @-moz-document url-prefix() {
             select {
                 padding-right: 30px;
-
+                background: var(--arrow-background);
                 background-size: 10px;
             }
         }
@@ -151,44 +203,35 @@
         select::-ms-expand {
             display: none; /* Убираем стандартную стрелку в IE/Edge */
         }
-
-        .buttons {
-            margin: 10px 0;
+        .ban-button {
+            padding: 8px 15px; /* Увеличиваем отступы */
+            background-color: #df2323; /* Красный фон */
+            color: white; /* Белый текст */
+            border: none; /* Убираем границу */
+            border-radius: 20px; /* Скругляем углы */
+            cursor: pointer; /* Курсор в виде руки */
+            margin-left: 10px; /* Отступ слева */
+            font-size: 14px; /* Размер текста */
+            transition: background-color 0.3s; /* Плавное изменение фона при наведении */
         }
 
-        .add-button, .remove-button {
-            border: none;
-            border-radius: 50%;
-            width: 23px;
-            height: 23px;
-            font-size: 16px;
-            color: white;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            padding: 0; /* Удалите любые стандартные отступы */
+        .ban-button:hover {
+            background-color: darkred; /* Темно-красный фон при наведении */
+        }
+        .recover-button {
+            padding: 8px 15px; /* Увеличиваем отступы */
+            background-color: lightgreen; /* Красный фон */
+            color: white; /* Белый текст */
+            border: none; /* Убираем границу */
+            border-radius: 20px; /* Скругляем углы */
+            cursor: pointer; /* Курсор в виде руки */
+            margin-left: 10px; /* Отступ слева */
+            font-size: 14px; /* Размер текста */
+            transition: background-color 0.3s; /* Плавное изменение фона при наведении */
         }
 
-        input[type=radio] {
-            display: none;
-        }
-
-        .add-button {
-            background-color: lightgreen;
-        }
-
-        .remove-button {
-            background-color: lightcoral;
-        }
-
-        #entryPricesContainer, #takeProfitsContainer {
-            margin-top: 10px;
-        }
-
-        #entryPricesContainer input, #takeProfitsContainer input {
-            display: block;
-            width: calc(100% - 20px); /* Учитывая отступы */
-            margin-bottom: 10px;
+        .recover-button:hover {
+            background-color: greenyellow; /* Темно-красный фон при наведении */
         }
     </style>
 </head>
@@ -197,7 +240,7 @@
         <header>
             <a class="profile">
                 <div class="profile_avatar">
-                    <img src="https://play-lh.googleusercontent.com/8LuyzmkLRILH6vVF7OBU8zf1-gLiWqUHINbiGLgWoXn7W48Mcr6wYcmGnS7YFfT24w" alt="profile_avatar">
+                    <img src="" alt="profile_avatar">
                 </div>
                 <div class="profile_detail">
                     <div class="profile_namebox">
@@ -207,178 +250,51 @@
             </a>
         </header>
         <main>
-            <form id="cryptoForm">
-                <div class="form-group">
-                    <label for="cryptoName">Name of the crypto:</label>
-                    <select id="cryptoName">
-                    </select>
+            <select id="statusFilter">
+                <option value="all">Все</option>
+                <option value="do">Активны</option>
+                <option value="doing">Забанены</option>
+            </select>
+            <div class="kanban">
+                <div class="kanban-column do" data-status="do">
+                    <h2 class="no-drag">Пользователи</h2>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
                 </div>
-
-                <div class="form-group">
-                    <label for="amountUSD">Amount of USD to buy:</label>
-                    <input type="number" id="amountUSD" name="amountUSD">
+                <div class="kanban-column doing" data-status="doing">
+                    <h2 class="no-drag">Забаненные пользователи</h2>
+                    <div class="kanban-task">Мабдула +799989893 <button class="recover-button">ВОССТАН.</button></div>
                 </div>
-
-                <div class="form-group">
-                    <label for="position">Position:</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="long" name="position" value="Long">
-                            <label for="long">Long</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="short" name="position" value="Short" checked>
-                            <label for="short">Short</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group" id="entryPricesGroup">
-                    <label for="entryPrices">Entry Prices:</label>
-                    <button class="add-button"  type="button" onclick="addEntryPrice()">+</button>
-                    <button class="remove-button" type="button" onclick="removeEntryPrice()">-</button>
-                    <div id="entryPricesContainer">
-                        <input type="number" id="entryPrice1" name="entryPrices">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="leverage">Leverage:</label>
-                    <input type="number" id="leverage" name="leverage" onchange="updateLiquidationPrice()">
-                </div>
-
-                <div class="form-group">
-                    <label>Liquidation Price:</label>
-                    <span id="liquidationPrice">---</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="marginType">Margin Type:</label>
-                    <select id="marginType">
-                        <option value="isolated">Isolated</option>
-                        <option value="crossed">Crossed</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="stopLoss">Stop Loss:</label>
-                    <input type="number" id="stopLoss" name="stopLoss">
-                </div>
-
-                <div class="form-group" id="takeProfitsGroup">
-                    <label for="takeProfits">Take Profits:</label>
-                    <button class="add-button"  type="button" onclick="addTakeProfit()">+</button>
-                    <button class="remove-button" type="button" onclick="removeTakeProfit()">-</button>
-                    <div id="takeProfitsContainer">
-                        <input type="number" id="takeProfit1" name="takeProfits">
-                    </div>
-                </div>
-            </form>
+            </div>
         </main>
     </div>
     <script>
-        function addEntryPrice() {
-            const container = document.getElementById('entryPricesContainer');
-            const newId = container.children.length + 1;
-            const input = document.createElement('input');
-            input.id = 'entryPrice' + newId;
-            input.name = 'entryPrices';
-            input.type = 'number';
-            container.appendChild(input);
-        }
-
-        function removeEntryPrice() {
-            const container = document.getElementById('entryPricesContainer');
-            if (container.children.length > 1) {
-                container.removeChild(container.lastChild);
-            }
-        }
-
-        function addTakeProfit() {
-            const container = document.getElementById('takeProfitsContainer');
-            const newId = container.children.length + 1;
-            const input = document.createElement('input');
-            input.id = 'takeProfit' + newId;
-            input.name = 'takeProfits';
-            input.type = 'number';
-            container.appendChild(input);
-        }
-
-        function removeTakeProfit() {
-            const container = document.getElementById('takeProfitsContainer');
-            if (container.children.length > 1) {
-                container.removeChild(container.lastChild);
-            }
-        }
         document.addEventListener("DOMContentLoaded", function() {
             let tg = window.Telegram.WebApp;
+
             document.getElementById("profile_name").innerText = `${tg.initDataUnsafe.user.first_name}`;
-            const formElements = document.querySelectorAll("#cryptoForm input, #cryptoForm select");
 
-            let cryptos = ['BTCUSDT_UMCBL', 'ETHUSDT_UMCBL', 'XRPUSDT_UMCBL', 'EOSUSDT_UMCBL', 'BCHUSDT_UMCBL', 'LTCUSDT_UMCBL', 'ADAUSDT_UMCBL', 'ETCUSDT_UMCBL', 'LINKUSDT_UMCBL', 'TRXUSDT_UMCBL', 'DOTUSDT_UMCBL', 'DOGEUSDT_UMCBL', 'SOLUSDT_UMCBL', 'MATICUSDT_UMCBL', 'BNBUSDT_UMCBL', 'UNIUSDT_UMCBL', 'ICPUSDT_UMCBL', 'AAVEUSDT_UMCBL', 'FILUSDT_UMCBL', 'XLMUSDT_UMCBL', 'ATOMUSDT_UMCBL', 'XTZUSDT_UMCBL', 'SUSHIUSDT_UMCBL', 'AXSUSDT_UMCBL', 'THETAUSDT_UMCBL', 'AVAXUSDT_UMCBL', 'DASHUSDT_UMCBL', 'SHIBUSDT_UMCBL', 'MANAUSDT_UMCBL', 'GALAUSDT_UMCBL', 'SANDUSDT_UMCBL', 'DYDXUSDT_UMCBL', 'CRVUSDT_UMCBL', 'NEARUSDT_UMCBL', 'EGLDUSDT_UMCBL', 'KSMUSDT_UMCBL', 'ARUSDT_UMCBL', 'FTMUSDT_UMCBL', 'PEOPLEUSDT_UMCBL', 'LRCUSDT_UMCBL', 'NEOUSDT_UMCBL', 'WAVESUSDT_UMCBL', 'ALGOUSDT_UMCBL', 'IOTAUSDT_UMCBL', 'ENJUSDT_UMCBL', 'GMTUSDT_UMCBL', 'ZILUSDT_UMCBL', 'IOSTUSDT_UMCBL', 'APEUSDT_UMCBL', 'RUNEUSDT_UMCBL', 'KNCUSDT_UMCBL', 'APTUSDT_UMCBL', 'CHZUSDT_UMCBL', 'XMRUSDT_UMCBL', 'ROSEUSDT_UMCBL', 'ZRXUSDT_UMCBL', 'KAVAUSDT_UMCBL', 'ENSUSDT_UMCBL', 'GALUSDT_UMCBL', 'AUDIOUSDT_UMCBL', 'SXPUSDT_UMCBL', 'C98USDT_UMCBL', 'OPUSDT_UMCBL', 'RSRUSDT_UMCBL', 'SNXUSDT_UMCBL', 'STORJUSDT_UMCBL', '1INCHUSDT_UMCBL', 'COMPUSDT_UMCBL', 'IMXUSDT_UMCBL', 'LUNA2USDT_UMCBL', 'FLOWUSDT_UMCBL', 'REEFUSDT_UMCBL', 'QTUMUSDT_UMCBL', 'API3USDT_UMCBL', 'MASKUSDT_UMCBL', 'WOOUSDT_UMCBL', 'GRTUSDT_UMCBL', 'BANDUSDT_UMCBL', 'STGUSDT_UMCBL', 'LUNCUSDT_UMCBL', 'ONEUSDT_UMCBL', 'JASMYUSDT_UMCBL', 'MKRUSDT_UMCBL', 'BATUSDT_UMCBL', 'MAGICUSDT_UMCBL', 'ALPHAUSDT_UMCBL', 'LDOUSDT_UMCBL', 'OCEANUSDT_UMCBL', 'CELOUSDT_UMCBL', 'BLURUSDT_UMCBL', 'MINAUSDT_UMCBL', 'COREUSDT_UMCBL', 'CFXUSDT_UMCBL', 'ASTRUSDT_UMCBL', 'AGIXUSDT_UMCBL', 'GMXUSDT_UMCBL', 'LINAUSDT_UMCBL', 'ANKRUSDT_UMCBL', 'ACHUSDT_UMCBL', 'FETUSDT_UMCBL', 'FXSUSDT_UMCBL', 'RNDRUSDT_UMCBL', 'HOOKUSDT_UMCBL', 'BNXUSDT_UMCBL', 'SSVUSDT_UMCBL', 'USDCUSDT_UMCBL', 'LQTYUSDT_UMCBL', 'STXUSDT_UMCBL', 'TRUUSDT_UMCBL', 'DUSKUSDT_UMCBL', 'HBARUSDT_UMCBL', 'INJUSDT_UMCBL', 'BELUSDT_UMCBL', 'COTIUSDT_UMCBL', 'VETUSDT_UMCBL', 'ARBUSDT_UMCBL', 'LOOKSUSDT_UMCBL', 'KLAYUSDT_UMCBL', 'FLMUSDT_UMCBL', 'OMGUSDT_UMCBL', 'RLCUSDT_UMCBL', 'CKBUSDT_UMCBL', 'IDUSDT_UMCBL', 'LITUSDT_UMCBL', 'JOEUSDT_UMCBL', 'TLMUSDT_UMCBL', 'HOTUSDT_UMCBL', 'CHRUSDT_UMCBL', 'RDNTUSDT_UMCBL', 'ICXUSDT_UMCBL', 'HFTUSDT_UMCBL', 'ONTUSDT_UMCBL', 'ZECUSDT_UMCBL', 'UNFIUSDT_UMCBL', 'NKNUSDT_UMCBL', 'ARPAUSDT_UMCBL', 'DARUSDT_UMCBL', 'SFPUSDT_UMCBL', 'SKLUSDT_UMCBL', 'RVNUSDT_UMCBL', 'CELRUSDT_UMCBL', 'FLOKIUSDT_UMCBL', 'SPELLUSDT_UMCBL', 'SUIUSDT_UMCBL', 'EDUUSDT_UMCBL', 'PEPEUSDT_UMCBL', 'IOTXUSDT_UMCBL', 'CTKUSDT_UMCBL', 'STMXUSDT_UMCBL', 'UMAUSDT_UMCBL', 'BSVUSDT_UMCBL', 'TONUSDT_UMCBL', 'GTCUSDT_UMCBL', 'DENTUSDT_UMCBL', 'ZENUSDT_UMCBL', 'ORDIUSDT_UMCBL', 'KEYUSDT_UMCBL', 'IDEXUSDT_UMCBL', 'SLPUSDT_UMCBL', 'COMBOUSDT_UMCBL', 'LEVERUSDT_UMCBL', 'RADUSDT_UMCBL', 'ANTUSDT_UMCBL', 'QNTUSDT_UMCBL', 'MAVUSDT_UMCBL', 'MDTUSDT_UMCBL', 'XVGUSDT_UMCBL', '1000XECUSDT_UMCBL', 'AGLDUSDT_UMCBL', 'WLDUSDT_UMCBL', 'PENDLEUSDT_UMCBL', 'ARKMUSDT_UMCBL', 'CVXUSDT_UMCBL', 'YGGUSDT_UMCBL', 'OGNUSDT_UMCBL', 'LPTUSDT_UMCBL', 'BNTUSDT_UMCBL', 'SEIUSDT_UMCBL', 'CYBERUSDT_UMCBL', 'BAKEUSDT_UMCBL', 'GLMRUSDT_UMCBL', 'LOOMUSDT_UMCBL', 'BIGTIMEUSDT_UMCBL', 'ORBSUSDT_UMCBL', 'WAXPUSDT_UMCBL', 'POLYXUSDT_UMCBL', 'TIAUSDT_UMCBL', 'TWTUSDT_UMCBL', 'MEMEUSDT_UMCBL', 'PYTHUSDT_UMCBL', 'JTOUSDT_UMCBL', '1000SATSUSDT_UMCBL', '1000RATSUSDT_UMCBL', 'ACEUSDT_UMCBL', 'XAIUSDT_UMCBL', 'MANTAUSDT_UMCBL'];
-
-            let select = document.getElementById("cryptoName");
-
-            cryptos.forEach(function(crypto) {
-                let option = document.createElement("option");
-                option.value = crypto;
-                option.textContent = crypto;
-                select.appendChild(option);
-            });
-            let buttonColor = getComputedStyle(document.documentElement).getPropertyValue('--tg-theme-button-color').trim();
-            function checkInputs() {
-                if (allInputsFilled()) {
-                    MainButton.setParams({"color": buttonColor});
-                    MainButton.enable();
-                } else {
-                    MainButton.setParams({"color": "#e5e5e5"});
-                    MainButton.disable();
-                }
-            }
-
-            formElements.forEach(element => {
-                element.addEventListener('input', checkInputs);
-            });
-
-            function allInputsFilled() {
-                // Проверка обычных полей и выпадающих списков
-                const standardInputsFilled = Array.from(formElements).every(element => {
-                    if (element.type !== "radio") {
-                        return element.value.trim() !== '';
-                    }
-                    return true;
-                });
-
-                // Проверка радиокнопок
-                const radioGroups = document.querySelectorAll(".radio-group");
-                const radiosFilled = Array.from(radioGroups).every(group => {
-                    const radios = group.querySelectorAll("input[type='radio']");
-                    return Array.from(radios).some(radio => radio.checked);
-                });
-
-                // Проверка динамически добавленных полей
-                const dynamicFieldsFilled = true; // Допустим, что эти поля заполнены корректно
-
-                return standardInputsFilled && radiosFilled && dynamicFieldsFilled;
-            }
-
-            var MainButton = tg.MainButton;
-            MainButton.text = "Start";
-            MainButton.onClick(function() {
-                window.location.href = "/";
-            });
-
-            checkInputs();
+            document.querySelector(".profile_avatar img").src = "https://i.pinimg.com/originals/1c/d6/8c/1cd68cf1696cae52cd45db862c73701d.png";
 
             let lastViewportHeight = tg.viewportHeight;
             function checkExpandedState() {
                 if (tg.isExpanded) {
-                    tg.MainButton.show();
+                    tg.MainButton.hide();
                 } else {
                     tg.MainButton.hide();
                 }
             }
-
             function checkViewportHeightChange() {
                 if (tg.viewportHeight !== lastViewportHeight) {
                     checkExpandedState();
@@ -389,20 +305,27 @@
             checkExpandedState();
             checkViewportHeightChange();
 
+            const statusFilter = document.getElementById('statusFilter');
+            const kanbanColumns = document.querySelectorAll('.kanban-column');
 
-            const dynamicFields = document.querySelectorAll("#entryPricesContainer input, #takeProfitsContainer input");
-            dynamicFields.forEach(field => {
-                field.addEventListener('input', checkInputs);
-            });
+            function filterTasks() {
+                const filterValue = statusFilter.value;
 
-            document.addEventListener('touchstart', function(e) {
-            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
-                if (!e.target.isEqualNode(document.activeElement)) {
-                    document.activeElement.blur();
-                }
+                kanbanColumns.forEach(column => {
+                    // Показываем или скрываем колонку в зависимости от выбранного фильтра
+                    if (filterValue === 'all' || column.dataset.status === filterValue) {
+                        column.style.display = '';
+                    } else {
+                        column.style.display = 'none';
+                    }
+                });
             }
-            }, false);
 
+            // Применяем фильтр при изменении значения select
+            statusFilter.addEventListener('change', filterTasks);
+
+            // Применяем фильтр при загрузке страницы
+            filterTasks();
         });
     </script>
 </body>
