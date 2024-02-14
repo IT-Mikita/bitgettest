@@ -317,50 +317,48 @@
 
             function updateButtonHandlers() {
             // Удаляем предыдущие обработчики, чтобы избежать накопления и повторного вызова
-            document.querySelectorAll('.ban-button').forEach(button => {
-                button.removeEventListener('click', banClickHandler);
-                button.addEventListener('click', banClickHandler);
-            });
+                document.querySelectorAll('.ban-button').forEach(button => {
+                    button.removeEventListener('click', banClickHandler);
+                    button.addEventListener('click', banClickHandler);
+                });
 
-            document.querySelectorAll('.recover-button').forEach(button => {
-                button.removeEventListener('click', recoverClickHandler);
-                button.addEventListener('click', recoverClickHandler);
-            });
-        }
+                document.querySelectorAll('.recover-button').forEach(button => {
+                    button.removeEventListener('click', recoverClickHandler);
+                    button.addEventListener('click', recoverClickHandler);
+                });
+            }
 
-        function banClickHandler(e) {
-            const taskElement = e.target.closest('.kanban-task');
-            moveTaskToBan(taskElement);
-        }
+            function banClickHandler(e) {
+                const taskElement = e.target.closest('.kanban-task');
+                moveTaskToBan(taskElement);
+            }
 
-        function recoverClickHandler(e) {
-            const taskElement = e.target.closest('.kanban-task');
-            moveTaskToActive(taskElement);
-        }
+            function recoverClickHandler(e) {
+                const taskElement = e.target.closest('.kanban-task');
+                moveTaskToActive(taskElement);
+            }
 
-        // Перемещает задачу в колонку забаненных пользователей
-        function moveTaskToBan(taskElement) {
-            const bannedColumn = document.querySelector('.kanban-column.doing');
-            // Заменяем кнопку на "ВОССТАН."
-            taskElement.querySelector('button').innerText = 'ВОССТАН.';
-            taskElement.querySelector('button').classList.replace('ban-button', 'recover-button');
-            bannedColumn.appendChild(taskElement);
-            updateButtonHandlers(); // Обновляем обработчики после каждого изменения
-        }
+            // Перемещает задачу в колонку забаненных пользователей
+            function moveTaskToBan(taskElement) {
+                const bannedColumn = document.querySelector('.kanban-column.doing');
+                // Заменяем кнопку на "ВОССТАН."
+                taskElement.querySelector('button').innerText = 'ВОССТАН.';
+                taskElement.querySelector('button').classList.replace('ban-button', 'recover-button');
+                bannedColumn.appendChild(taskElement);
+                updateButtonHandlers(); // Обновляем обработчики после каждого изменения
+            }
 
-        // Перемещает задачу обратно в колонку активных пользователей
-        function moveTaskToActive(taskElement) {
-            const activeColumn = document.querySelector('.kanban-column.do');
-            // Заменяем кнопку на "ЗАБАНИТЬ"
-            taskElement.querySelector('button').innerText = 'ЗАБАНИТЬ';
-            taskElement.querySelector('button').classList.replace('recover-button', 'ban-button');
-            activeColumn.appendChild(taskElement);
-            updateButtonHandlers(); // Обновляем обработчики после каждого изменения
-        }
+            // Перемещает задачу обратно в колонку активных пользователей
+            function moveTaskToActive(taskElement) {
+                const activeColumn = document.querySelector('.kanban-column.do');
+                // Заменяем кнопку на "ЗАБАНИТЬ"
+                taskElement.querySelector('button').innerText = 'ЗАБАНИТЬ';
+                taskElement.querySelector('button').classList.replace('recover-button', 'ban-button');
+                activeColumn.appendChild(taskElement);
+                updateButtonHandlers(); // Обновляем обработчики после каждого изменения
+            }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            updateButtonHandlers(); // Инициализируем обработчики при загрузке страницы
-        });
+            updateButtonHandlers(); // Инициализация обработчиков при загрузке страницы
         });
     </script>
 </body>
