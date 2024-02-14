@@ -258,23 +258,11 @@
             <div class="kanban">
                 <div class="kanban-column do" data-status="do">
                     <h2 class="no-drag">Пользователи</h2>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
-                    <div class="kanban-task">Мабдула +799989893 <button class="ban-button">ЗАБАНИТЬ</button></div>
+                    <div class="kanban-task">Мабдула +6281529439624 <button class="ban-button">ЗАБАНИТЬ</button></div>
                 </div>
                 <div class="kanban-column doing" data-status="doing">
                     <h2 class="no-drag">Забаненные пользователи</h2>
-                    <div class="kanban-task">Мабдула +799989893 <button class="recover-button">ВОССТАН.</button></div>
+                    <!-- <div class="kanban-task">Мабдула +799989893 <button class="recover-button">ВОССТАН.</button></div> -->
                 </div>
             </div>
         </main>
@@ -326,6 +314,46 @@
 
             // Применяем фильтр при загрузке страницы
             filterTasks();
+
+            function moveTaskToBan(taskElement) {
+                const bannedColumn = document.querySelector('.kanban-column.doing');
+                taskElement.querySelector('button').innerText = 'ВОССТАН.';
+                taskElement.querySelector('button').className = 'recover-button';
+                bannedColumn.appendChild(taskElement);
+                updateButtonHandlers();
+            }
+
+            function moveTaskToActive(taskElement) {
+                const activeColumn = document.querySelector('.kanban-column.do');
+                taskElement.querySelector('button').innerText = 'ЗАБАНИТЬ';
+                taskElement.querySelector('button').className = 'ban-button';
+                activeColumn.appendChild(taskElement);
+                updateButtonHandlers();
+            }
+
+            function updateButtonHandlers() {
+                document.querySelectorAll('.ban-button').forEach(button => {
+                    button.removeEventListener('click', banClickHandler);
+                    button.addEventListener('click', banClickHandler);
+                });
+
+                document.querySelectorAll('.recover-button').forEach(button => {
+                    button.removeEventListener('click', recoverClickHandler);
+                    button.addEventListener('click', recoverClickHandler);
+                });
+            }
+
+            function banClickHandler(e) {
+                const taskElement = e.target.closest('.kanban-task');
+                moveTaskToBan(taskElement);
+            }
+
+            function recoverClickHandler(e) {
+                const taskElement = e.target.closest('.kanban-task');
+                moveTaskToActive(taskElement);
+            }
+
+            updateButtonHandlers();
         });
     </script>
 </body>
