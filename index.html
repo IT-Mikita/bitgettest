@@ -204,7 +204,7 @@
             display: none; /* Убираем стандартную стрелку в IE/Edge */
         }
         .ban-button {
-            padding: 8px 15px; /* Увеличиваем отступы */
+            padding: 8px 9px; /* Увеличиваем отступы */
             background-color: #df2323; /* Красный фон */
             color: white; /* Белый текст */
             border: none; /* Убираем границу */
@@ -219,7 +219,7 @@
             background-color: darkred; /* Темно-красный фон при наведении */
         }
         .recover-button {
-            padding: 8px 15px; /* Увеличиваем отступы */
+            padding: 8px 9px; /* Увеличиваем отступы */
             background-color: lightgreen; /* Красный фон */
             color: white; /* Белый текст */
             border: none; /* Убираем границу */
@@ -315,45 +315,52 @@
             // Применяем фильтр при загрузке страницы
             filterTasks();
 
-            function moveTaskToBan(taskElement) {
-                const bannedColumn = document.querySelector('.kanban-column.doing');
-                taskElement.querySelector('button').innerText = 'ВОССТАН.';
-                taskElement.querySelector('button').className = 'recover-button';
-                bannedColumn.appendChild(taskElement);
-                updateButtonHandlers();
-            }
-
-            function moveTaskToActive(taskElement) {
-                const activeColumn = document.querySelector('.kanban-column.do');
-                taskElement.querySelector('button').innerText = 'ЗАБАНИТЬ';
-                taskElement.querySelector('button').className = 'ban-button';
-                activeColumn.appendChild(taskElement);
-                updateButtonHandlers();
-            }
-
             function updateButtonHandlers() {
-                document.querySelectorAll('.ban-button').forEach(button => {
-                    button.removeEventListener('click', banClickHandler);
-                    button.addEventListener('click', banClickHandler);
-                });
+            // Удаляем предыдущие обработчики, чтобы избежать накопления и повторного вызова
+            document.querySelectorAll('.ban-button').forEach(button => {
+                button.removeEventListener('click', banClickHandler);
+                button.addEventListener('click', banClickHandler);
+            });
 
-                document.querySelectorAll('.recover-button').forEach(button => {
-                    button.removeEventListener('click', recoverClickHandler);
-                    button.addEventListener('click', recoverClickHandler);
-                });
-            }
+            document.querySelectorAll('.recover-button').forEach(button => {
+                button.removeEventListener('click', recoverClickHandler);
+                button.addEventListener('click', recoverClickHandler);
+            });
+        }
 
-            function banClickHandler(e) {
-                const taskElement = e.target.closest('.kanban-task');
-                moveTaskToBan(taskElement);
-            }
+        function banClickHandler(e) {
+            const taskElement = e.target.closest('.kanban-task');
+            moveTaskToBan(taskElement);
+        }
 
-            function recoverClickHandler(e) {
-                const taskElement = e.target.closest('.kanban-task');
-                moveTaskToActive(taskElement);
-            }
+        function recoverClickHandler(e) {
+            const taskElement = e.target.closest('.kanban-task');
+            moveTaskToActive(taskElement);
+        }
 
-            updateButtonHandlers();
+        // Перемещает задачу в колонку забаненных пользователей
+        function moveTaskToBan(taskElement) {
+            const bannedColumn = document.querySelector('.kanban-column.doing');
+            // Заменяем кнопку на "ВОССТАН."
+            taskElement.querySelector('button').innerText = 'ВОССТАН.';
+            taskElement.querySelector('button').classList.replace('ban-button', 'recover-button');
+            bannedColumn.appendChild(taskElement);
+            updateButtonHandlers(); // Обновляем обработчики после каждого изменения
+        }
+
+        // Перемещает задачу обратно в колонку активных пользователей
+        function moveTaskToActive(taskElement) {
+            const activeColumn = document.querySelector('.kanban-column.do');
+            // Заменяем кнопку на "ЗАБАНИТЬ"
+            taskElement.querySelector('button').innerText = 'ЗАБАНИТЬ';
+            taskElement.querySelector('button').classList.replace('recover-button', 'ban-button');
+            activeColumn.appendChild(taskElement);
+            updateButtonHandlers(); // Обновляем обработчики после каждого изменения
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            updateButtonHandlers(); // Инициализируем обработчики при загрузке страницы
+        });
         });
     </script>
 </body>
